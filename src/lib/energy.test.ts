@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { savingScore } from "./energy";
+import { savingScore, isPowerCut } from "./energy";
 
 describe("fair scoring vs own baseline", () => {
   it("rewards improvement, not raw low usage", () => {
@@ -8,5 +8,14 @@ describe("fair scoring vs own baseline", () => {
   });
   it("is 50 at baseline", () => {
     expect(savingScore(10, 10)).toBe(50);
+  });
+});
+
+describe("power cut", () => {
+  it("cuts after 3 straight days above normal", () => {
+    expect(isPowerCut({ baseline: 10, week: [5, 5, 5, 5, 11, 12, 13] })).toBe(true);
+  });
+  it("does not cut after only 2 days", () => {
+    expect(isPowerCut({ baseline: 10, week: [5, 5, 5, 5, 9, 12, 13] })).toBe(false);
   });
 });

@@ -1,9 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Area, AreaChart, Bar as RBar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, PowerOff } from "lucide-react";
 import { Shell, Panel, Stat, PageTitle, Bar } from "@/components/Shell";
-import { rooms, RATE_PER_KWH, weekAvg, roomScore, anomalyPct } from "@/lib/energy";
+import { rooms, RATE_PER_KWH, weekAvg, roomScore, anomalyPct, isPowerCut, overStreak, POWER_CUT_DAYS } from "@/lib/energy";
+
+function beep() {
+  try {
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new Ctx();
+    [0, 0.35, 0.7].forEach((t) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = "square";
+      o.frequency.value = 880;
+      g.gain.value = 0.08;
+      o.connect(g).connect(ctx.destination);
+      o.start(ctx.currentTime + t);
+      o.stop(ctx.currentTime + t + 0.2);
+    });
+  } catch {}
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,7 +48,16 @@ function Dashboard() {
   const savedMonth = rooms.reduce((a, r) => a + Math.max(0, r.baseline - weekAvg(r)), 0) * 30;
   const score = Math.round(rooms.reduce((a, r) => a + roomScore(r), 0) / rooms.length);
   const trend = days.map((d, i) => ({ d, kwh: Math.round(rooms.reduce((a, r) => a + (r.week[i] ?? 0), 0)), base: Math.round(baselineTotal) }));
-  const alerts = rooms.filter((r) => anomalyPct(r) > 40);
+  const alerts = rooms.filter((r) => r.today > r.baseline && !isPowerCut(r));
+  const cuts = rooms.filter(isPowerCut);
+  useEffect(() => {
+    if (alerts.length + cuts.length === 0) return;
+    beep();
+    const once = () => { beep(); window.removeEventListener("pointerdown", once); };
+    window.addEventListener("pointerdown", once);
+    return () => window.removeEventListener("pointerdown", once);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const roomBars = rooms.map((r) => ({ id: r.id, today: r.today, normal: r.baseline }));
 
   return (
@@ -72,16 +98,22 @@ function Dashboard() {
         </Panel>
         <Panel>
           <h2 className="flex items-center gap-2 font-display font-semibold"><AlertTriangle className="h-4 w-4 text-warn" /> Energy Detective</h2>
-          <div className="mt-4 space-y-3">
+          <div className="mt-4 max-h-96 space-y-3 overflow-y-auto">
+            {cuts.map((r) => (
+              <div key={r.id} className="animate-pulse rounded-lg border border-destructive bg-destructive/15 p-3 text-sm">
+                <div className="flex items-center gap-2 font-semibold text-destructive"><PowerOff className="h-4 w-4" /> Room {r.id} — POWER CUT</div>
+                <div className="text-muted-foreground">Above normal for {overStreak(r)} days in a row (limit {POWER_CUT_DAYS}). Supply switched off until the warden resets it.</div>
+              </div>
+            ))}
             {alerts.map((r) => (
               <div key={r.id} className="rounded-lg border border-warn/40 bg-warn/10 p-3 text-sm">
                 <div className="font-semibold">Room {r.id}</div>
                 <div className="text-muted-foreground">Normal {r.baseline} kWh → now {r.today} kWh</div>
-                <div className="mt-1 font-mono text-warn">⚠ {anomalyPct(r)}% above normal</div>
+                <div className="mt-1 font-mono text-warn">🔊 ⚠ {anomalyPct(r)}% above normal</div>
                 <div className="mt-1 text-xs text-muted-foreground">Check: heater, iron, kettle, lights left on.</div>
               </div>
             ))}
-            {alerts.length === 0 && <p className="text-sm text-muted-foreground">No unusual usage. 🎉</p>}
+            {alerts.length + cuts.length === 0 && <p className="text-sm text-muted-foreground">No unusual usage. 🎉</p>}
             <Link to="/wattbot" className="block text-sm text-electric hover:underline">Ask WattBot for tips →</Link>
           </div>
         </Panel>

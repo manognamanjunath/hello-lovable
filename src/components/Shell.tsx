@@ -48,7 +48,7 @@ export function Shell({ children }: { children: ReactNode }) {
 }
 
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-xl border border-border bg-card/70 p-5 shadow-glow ${className}`}>{children}</div>;
+  return <div className={`animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-700 rounded-xl border border-border bg-card/70 p-5 shadow-glow ${className}`}>{children}</div>;
 }
 
 export function Stat({ label, value, sub, tone = "primary" }: { label: string; value: string; sub?: string; tone?: "primary" | "electric" | "warn" }) {
@@ -64,7 +64,7 @@ export function Stat({ label, value, sub, tone = "primary" }: { label: string; v
 
 export function PageTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
-    <div className="mb-8">
+    <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
       <div className="text-xs font-semibold uppercase tracking-[0.3em] text-electric">{kicker}</div>
       <h1 className="mt-1 font-display text-3xl font-bold md:text-4xl">{title}</h1>
       {sub && <p className="mt-2 max-w-2xl text-muted-foreground">{sub}</p>}

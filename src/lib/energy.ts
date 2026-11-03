@@ -34,9 +34,9 @@ export const rooms: Room[] = Array.from({ length: 16 }, (_, i) => {
     id,
     floor,
     block: i < 8 ? "A" : "B",
-    occupants: [names[i], names[(i + 5) % 16]],
+    occupants: [names[i]!, names[(i + 5) % 16]!],
     baseline: id === "204" ? 10 : baseline,
-    today: week[6],
+    today: week[6]!,
     week,
     coins: Math.round(200 + seeded(i + 99) * 1400),
     badges: [],
@@ -109,5 +109,5 @@ export function answer(r: Room, q: string) {
     const saved = Math.max(0, (r.baseline - avg) * 7);
     return `This week you avoided about ${(saved * CO2_PER_KWH).toFixed(1)} kg of CO₂ — roughly ${Math.round(saved * CO2_PER_KWH / 0.06)} smartphone charges' worth.`;
   }
-  return tipsFor(r)[Math.floor(Math.random() * 4)];
+  return tipsFor(r)[Math.floor(Math.random() * 4)] ?? "";
 }

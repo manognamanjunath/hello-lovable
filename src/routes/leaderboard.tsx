@@ -42,8 +42,8 @@ function Leaderboard() {
           <Panel className="text-center">
             <div className="text-xs uppercase tracking-widest text-muted-foreground">Monthly Green Champion</div>
             <div className="mt-2 text-5xl">🏆</div>
-            <div className="mt-2 font-display text-2xl font-bold text-primary text-glow">Room {list[0].id}</div>
-            <div className="text-sm text-muted-foreground">{list[0].occupants.join(" & ")}</div>
+            <div className="mt-2 font-display text-2xl font-bold text-primary text-glow">Room {list[0]!.id}</div>
+            <div className="text-sm text-muted-foreground">{list[0]!.occupants.join(" & ")}</div>
           </Panel>
           <Panel>
             <h3 className="font-display font-semibold">Hostel Green League</h3>

@@ -30,7 +30,7 @@ function Dashboard() {
   const baselineTotal = rooms.reduce((a, r) => a + r.baseline, 0);
   const savedMonth = rooms.reduce((a, r) => a + Math.max(0, r.baseline - weekAvg(r)), 0) * 30;
   const score = Math.round(rooms.reduce((a, r) => a + roomScore(r), 0) / rooms.length);
-  const trend = days.map((d, i) => ({ d, kwh: Math.round(rooms.reduce((a, r) => a + r.week[i], 0)), base: Math.round(baselineTotal) }));
+  const trend = days.map((d, i) => ({ d, kwh: Math.round(rooms.reduce((a, r) => a + (r.week[i] ?? 0), 0)), base: Math.round(baselineTotal) }));
   const alerts = rooms.filter((r) => anomalyPct(r) > 40);
   const roomBars = rooms.map((r) => ({ id: r.id, today: r.today, normal: r.baseline }));
 

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BattlesRouteImport } from './routes/battles'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as LoginRouteImport } from './routes/login'
@@ -36,6 +37,11 @@ const AdminRoute = AdminRouteImport.update({
 const BattlesRoute = BattlesRouteImport.update({
   id: '/battles',
   path: '/battles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImpactRoute = ImpactRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/battles': typeof BattlesRoute
+  '/contact': typeof ContactRoute
   '/impact': typeof ImpactRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/battles': typeof BattlesRoute
+  '/contact': typeof ContactRoute
   '/impact': typeof ImpactRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/battles': typeof BattlesRoute
+  '/contact': typeof ContactRoute
   '/impact': typeof ImpactRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/battles'
+    | '/contact'
     | '/impact'
     | '/leaderboard'
     | '/login'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/battles'
+    | '/contact'
     | '/impact'
     | '/leaderboard'
     | '/login'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/battles'
+    | '/contact'
     | '/impact'
     | '/leaderboard'
     | '/login'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AchievementsRoute: typeof AchievementsRoute
   AdminRoute: typeof AdminRoute
   BattlesRoute: typeof BattlesRoute
+  ContactRoute: typeof ContactRoute
   ImpactRoute: typeof ImpactRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/battles'
       fullPath: '/battles'
       preLoaderRoute: typeof BattlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/impact': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AchievementsRoute: AchievementsRoute,
   AdminRoute: AdminRoute,
   BattlesRoute: BattlesRoute,
+  ContactRoute: ContactRoute,
   ImpactRoute: ImpactRoute,
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,

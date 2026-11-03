@@ -30,7 +30,7 @@ function Admin() {
         <Panel>
           <h2 className="font-display font-semibold">Floor-wise consumption today</h2>
           <div className="mt-4 h-56">
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={floors}>
                 <XAxis dataKey="floor" stroke="var(--muted-foreground)" fontSize={12} />
                 <YAxis stroke="var(--muted-foreground)" fontSize={12} />

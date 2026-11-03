@@ -53,7 +53,7 @@ function Dashboard() {
         <Panel className="lg:col-span-2">
           <h2 className="font-display font-semibold">Hostel usage this week</h2>
           <div className="mt-4 h-64">
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trend}>
                 <defs>
                   <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
@@ -90,7 +90,7 @@ function Dashboard() {
       <Panel className="mt-4">
         <h2 className="font-display font-semibold">Room-wise usage today vs normal</h2>
         <div className="mt-4 h-64">
-          <ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={roomBars}>
               <XAxis dataKey="id" stroke="var(--muted-foreground)" fontSize={12} />
               <YAxis stroke="var(--muted-foreground)" fontSize={12} />

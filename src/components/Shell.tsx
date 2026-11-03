@@ -10,6 +10,7 @@ const nav = [
   { to: "/achievements", label: "Achievements" },
   { to: "/impact", label: "Green Impact" },
   { to: "/admin", label: "Warden" },
+  { to: "/contact", label: "Contact" },
 ] as const;
 
 export function Shell({ children }: { children: ReactNode }) {

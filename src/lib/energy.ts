@@ -30,6 +30,7 @@ export const rooms: Room[] = Array.from({ length: 16 }, (_, i) => {
     Math.round(baseline * (factor + (seeded(i * 7 + d) - 0.5) * 0.3) * 10) / 10,
   );
   if (id === "204") week[6] = 18; // anomaly showcase
+  if (id === "302") for (const d of [4, 5, 6]) week[d] = Math.round(baseline * 1.35 * 10) / 10; // power-cut showcase
   return {
     id,
     floor,
@@ -110,4 +111,16 @@ export function answer(r: Room, q: string) {
     return `This week you avoided about ${(saved * CO2_PER_KWH).toFixed(1)} kg of CO₂ — roughly ${Math.round(saved * CO2_PER_KWH / 0.06)} smartphone charges' worth.`;
   }
   return tipsFor(r)[Math.floor(Math.random() * 4)] ?? "";
+}
+
+/** Consecutive most-recent days where usage was above the room's normal. */
+export function overStreak(r: Pick<Room, "week" | "baseline">) {
+  let n = 0;
+  for (let i = r.week.length - 1; i >= 0 && r.week[i]! > r.baseline; i--) n++;
+  return n;
+}
+
+export const POWER_CUT_DAYS = 3;
+export function isPowerCut(r: Pick<Room, "week" | "baseline">) {
+  return overStreak(r) >= POWER_CUT_DAYS;
 }
